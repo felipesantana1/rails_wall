@@ -1,0 +1,32 @@
+<h1>Coding Dojo Wall! Welcome <%= @user.username %></h1>
+<a href="/users/logout">Log Out!</a>
+<br>
+
+<h2>Write a Message!</h2>
+<form action="/messages" method="post">
+    <input type="hidden" name="authenticity_token" value="<%=form_authenticity_token%>">
+    <textarea id="message" name="message"></textarea>
+    <input type="submit" value="Post Message">
+</form>
+
+<% @messages.each do |message| %>
+    <h4>Message</h4>
+    <p><%= message.user.username %> -<%= message.created_at.strftime("%B-%d-%Y") %></p>
+    <b><%= message.content %></b>
+    <h5>Comments</h5>
+    <ul>
+    <% @comments.each do |comment| %>
+        <% if comment.message.id == message.id %>
+        <p><%= comment.user.username%> -<%= comment.created_at.strftime("%B-%d-%Y") %></p>
+        <li><%= comment.content %></li>
+        <% end %>
+    <% end %>
+    </ul>
+    <form action="/messages/<%= message.id %>/comment" method="post">
+        <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+        <textarea name="comment"></textarea>
+        <input type="submit" value="comment">
+    </form>
+<% end %>
+
+
